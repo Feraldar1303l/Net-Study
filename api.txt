@@ -1,0 +1,81 @@
+CONTROLADOR QUE DEVUELVE JSON COMO RESULTADO
+----------------------------------------------------------
+using Microsoft.AspNetCore.Mvc;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ValuesController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult GetValues()
+    {
+        var numbers = new int[] { 10, 20, 5, 3, 12, 7 };
+        var result = new {
+            Average = numbers.Average(),
+            Max = numbers.Max(),
+            Min = numbers.Min()
+        };
+        return Ok(result);
+    }
+}
+------------------------------------------------------------
+
+
+-------------------------
+WEB API
+-------------------------
+using Microsoft.AspNetCore.Mvc;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ValuesController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult GetValues()
+    {
+        var numbers = new int[] { 10, 20, 5, 3, 12, 7 };
+        var result = new {
+            Average = numbers.Average(),
+            Max = numbers.Max(),
+            Min = numbers.Min()
+        };
+        return Ok(result);
+    }
+}
+
+--------------------------------
+CONEXIÓN CON ENTITY FRAMEWORK
+--------------------------------
+
+||DEFINE MODELO||
+
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+}
+
+||CONFIGURA EL CONTEXTO||
+using Microsoft.EntityFrameworkCore;
+
+public class ApplicationDbContext : DbContext
+{
+    public DbSet<Product> Products { get; set; }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("YourConnectionStringHere");
+    }
+}
+
+||CONSULTA SIMPLE||
+using (var context = new ApplicationDbContext())
+{
+    var products = context.Products.ToList();
+    foreach (var product in products)
+    {
+        Console.WriteLine($"Product: {product.Name}, Price: {product.Price}");
+    }
+}
+---------------------------------------------------------------------------------------
